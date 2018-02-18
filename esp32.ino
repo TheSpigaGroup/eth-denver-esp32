@@ -5,8 +5,8 @@ const char * networkName = "grove";
 const char * networkPswd = "aaaaaaaaaaaa";
 
 // Internet domain to request from:
-const char * hostDomain = "example.com";
-const int hostPort = 80;
+const char * hostDomain = "192.168.2.1";
+const unsigned int hostPort = 3000;
 
 const int BUTTON_PIN = 0;
 const int LED_PIN = 5;
@@ -28,17 +28,13 @@ void setup() {
   digitalWrite(LED_PIN, LOW); // LED off
   Serial.print("Press button 0 to connect to ");
   Serial.println(hostDomain);
+  delay(5000);
 }
 
 void loop() {
-  if (digitalRead(BUTTON_PIN) == LOW) { // Check if button has been pressed
-    while (digitalRead(BUTTON_PIN) == LOW); // Wait for button to be released
-
-    digitalWrite(LED_PIN, HIGH); // Turn on LED
-    requestURL(hostDomain, hostPort); // Connect to server
-    digitalWrite(LED_PIN, LOW); // Turn off LED
-  }
-  if (digitalRead(LATCH_PIN) == LOW) {
+  if (digitalRead(LATCH_PIN) == HIGH && !latchState) {
+    latchState = 1;
+    tamperCounter++;
     requestURL(hostDomain, hostPort);  
   }
 }
